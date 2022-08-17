@@ -1,0 +1,13 @@
+/.idea/.idea.Itpros.Haiku.Detection/.idea/.name
+/Itpros.Haiku.Detection/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
+*.xml
+*.cache
+*.props
+*.json
+*.targets
+*.info
+*.iml
+*.dll
+*.pdb
+*.txt
+/Itpros.Haiku.Detection/obj/Debug/netcoreapp3.1/Itpros.Haiku.Detection.AssemblyInfo.cs
