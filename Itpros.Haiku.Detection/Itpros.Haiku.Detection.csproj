@@ -2,6 +2,10 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>detector</ToolCommandName>
+        <PackageOutputPath>.</PackageOutputPath>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 

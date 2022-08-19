@@ -15,6 +15,7 @@ namespace Itpros.Haiku.Detection
         {
             var poem = new List<string>();
             var path = args[0];
+            
             try
             {
                 if (!File.Exists(path))
