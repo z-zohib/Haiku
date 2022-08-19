@@ -19,11 +19,11 @@ namespace Itpros.Haiku.Detection
         /// 1 - a vowel is one syllable
         /// 2 - consecutive vowels counts as 1
         /// 3 - 'y' at the end is a syllable
-        /// 4 - 'e' at the end is NOT a syllable
+        /// 4 - 'e' at the end is NOT a syllable unless it's the only vowel
         /// </summary>
         /// <param name="poem"></param>
         /// <returns></returns>
-        public static bool IsHaiku(List<string> poem)
+        public static bool IsHaiku(List<List<string>> poem)
         {
             if (poem.Count != 3)
             {
@@ -32,54 +32,65 @@ namespace Itpros.Haiku.Detection
             
             var syllablesPerLine = new List<int>();
             
-            foreach (var lineUnfiltered in poem)
+            foreach (var line in poem)
             {
-                var line = lineUnfiltered.ToLower();
-                var count = 0;
-                var totalCharactersInLine = line.Length;
-                var lastIndex = totalCharactersInLine - 1;
-                
-                for (var i = 0; i < totalCharactersInLine; i++)
-                {
-                    var currentCharacter = line[i];
-                    if (Vowels.Contains(currentCharacter))
-                    {
-                        if (i > 0 && Vowels.Contains(line[i - 1]))
-                        {
-                            Console.WriteLine("skipped: " + line[i - 1] + currentCharacter);
-                            continue;
-                        }
-                        
-                        if (i != lastIndex && line[i + 1] == ' ' && currentCharacter == 'e')
-                        {
-                            Console.WriteLine("skipped: " + line[i - 1] + currentCharacter);
-                            continue; 
-                        }
-                        
-                        if (i > 0)
-                        {
-                            Console.WriteLine("counted: " + line[i - 1] + currentCharacter);
-                        }
-                        
-                        count++;
-                    }
-                    else if (i == lastIndex && currentCharacter == 'y')
-                    {
-                        count++;
-                    }
-                }
+                var count = CountSyllablesInLine(line);
 
                 syllablesPerLine.Add(count);
             }
-            
-            Console.WriteLine("Line 1: " + syllablesPerLine[0]);
-            Console.WriteLine("Line 2: " + syllablesPerLine[1]);
-            Console.WriteLine("Line 3: " + syllablesPerLine[2]);
 
             return syllablesPerLine[0] == 5 &&
                    syllablesPerLine[1] == 7 &&
                    syllablesPerLine[2] == 5;
+        }
 
+        private static int CountSyllablesInLine(ICollection<string> line)
+        {
+            var count = 0;
+
+            foreach (var word in line)
+            {
+                count += CountSyllablesInWord(word);
+            }
+
+            return count;
+        }
+        private static int CountSyllablesInWord(string word)
+        {
+            var totalCharactersInWord = word.Length;
+            var lastIndex = word.Length - 1;
+            var count = 0;
+
+            for (var i = 0; i < totalCharactersInWord; i++)
+            {
+                var currentCharacter = word[i];
+                    
+                if (Vowels.Contains(currentCharacter)) // rule 1 - a vowel is one syllable
+                {
+                    if (i > 0 && Vowels.Contains(word[i - 1])) // rule 2 - consecutive vowels counts as 1
+                    {
+                        continue;
+                    }
+                        
+                    if (i == lastIndex && currentCharacter == 'e' && count != 0) // rule 4 - 'e' at the end is NOT a syllable unless it's the only vowel
+                    {
+                        continue; 
+                    }
+                        
+                    count++;
+                }
+                else if (i == lastIndex && currentCharacter == 'y') // rule 3 - 'y' at the end is a syllable
+                {
+                    if (i > 0 && Vowels.Contains(word[i - 1])) // rule 2 - consecutive vowels counts as 1
+                    {
+                        continue;
+                    }
+                    
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }
