@@ -10,10 +10,9 @@ namespace Itpros.Haiku.Detection
 {
     class Program
     {
-        
         static void Main(string[] args)
         {
-            var poem = new List<string>();
+            var poem = new List<List<string>>();
             var path = args[0];
             
             try
@@ -28,7 +27,11 @@ namespace Itpros.Haiku.Detection
                 {
                     while (sr.Peek() >= 0)
                     {
-                        poem.Add(sr.ReadLine());
+                        var line = sr.ReadLine();
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+                        var words = line.ToLower().Split(' ');
+
+                        poem.Add(new List<string>(words));
                     }
                 }
             }
@@ -46,7 +49,6 @@ namespace Itpros.Haiku.Detection
             {
                 Console.WriteLine("Not a haiku poem because __");
             }
-            
         }
     }
 }
